@@ -1,3 +1,10 @@
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+# Sample data to store orders
+orders = []
+
 # Definition Class Order
 class Order:
     def __init__(self, id, bottle_type, quantity, status):
@@ -6,36 +13,35 @@ class Order:
         self.quantity = quantity
         self.status = status
 
-    # Getter 'id'
-    def get_id(self):
-        return self.id
+# Endpoint to create a new order
+@app.route('/orders', methods=['POST'])
+def create_order():
+    data = request.get_json()
 
-    # Setter 'id'
-    def set_id(self, new_id):
-        self.id = new_id
+    # Assuming the JSON data has 'id', 'bottle_type', 'quantity', and 'status' fields
+    new_order = Order(
+        id=data['id'],
+        bottle_type=data['bottle_type'],
+        quantity=data['quantity'],
+        status=data['status']
+    )
 
-    # Getter 'bottle_type'
-    def get_bottle_type(self):
-        return self.bottle_type
+    orders.append(new_order)
+    return jsonify({'message': 'Order created successfully'}), 201
 
-    # Setter 'bottle_type'
-    def set_bottle_type(self, new_bottle_type):
-        self.bottle_type = new_bottle_type
+# Endpoint to get all orders
+@app.route('/orders', methods=['GET'])
+def get_orders():
+    orders_data = []
+    for order in orders:
+        orders_data.append({
+            'id': order.get_id(),
+            'bottle_type': order.get_bottle_type(),
+            'quantity': order.get_quantity(),
+            'status': order.get_status()
+        })
+    return jsonify({'orders': orders_data})
 
-    # Getter 'quantity'
-    def get_quantity(self):
-        return self.quantity
-
-    # Setter 'quantity'
-    def set_quantity(self, new_quantity):
-        self.quantity = new_quantity
-
-    # Getter 'status'
-    def get_status(self):
-        return self.status
-
-    # Setter 'status'
-    def set_status(self, new_status):
-        self.status = new_status
-
-
+# Run the Flask app
+if __name__ == '__main__':
+    app.run(debug=True)
