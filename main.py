@@ -1,3 +1,5 @@
+from typing import List  # Import List from typing module
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
@@ -56,7 +58,7 @@ def read_order(order_id: int):
         raise HTTPException(status_code=404, detail="Order not found")
     return {"id": order.id, "bottle_type": order.bottle_type, "quantity": order.quantity, "status": order.status}
 
-@app.get("/orders/", response_model=list[OrderResponse])
+@app.get("/orders/", response_model=List[OrderResponse])  # Use List[OrderResponse] here
 def read_orders(skip: int = 0, limit: int = 10):
     orders = list(orders_db.values())[skip : skip + limit]
     return [{"id": order.id, "bottle_type": order.bottle_type, "quantity": order.quantity, "status": order.status} for order in orders]
