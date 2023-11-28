@@ -39,11 +39,12 @@ data = response.json()
 
 orders_db = data
 # In-memory database to store orders
-for order in orders_db:
-    order_id = order['id']
-    order_type = order['type']
-    quantity = order['quantity']
-    status = order['status']
+# for order in orders_db:
+#    order_id = order['id']
+#    order_type = order['type']
+#    quantity = order['quantity']
+#    status = order['status']
+
 
 # orders_db = {}
 
@@ -67,7 +68,7 @@ class OrderResponse(BaseModel):
 def create_order(order: OrderCreate):
     order_id = len(orders_db) + 1
     order_obj = Order(id=order_id, type=order.type, quantity=order.quantity, status=order.status)
-    orders_db[order_id] = order_obj
+    orders_db.append(order_obj)
     return {"id": order_id, "type": order.type, "quantity": order.quantity, "status": order.status}
 
 @app.get("/orders/{order_id}", response_model=OrderResponse)
@@ -79,7 +80,6 @@ def read_order(order_id: int):
 
 @app.get("/orders/", response_model=List[OrderResponse])
 def read_orders(skip: int = 0, limit: int = 10):
-    orders = list(orders_db.values())[skip : skip + limit]
     return [{"id": order.id, "type": order.type, "quantity": order.quantity, "status": order.status} for order in orders]
 
 @app.put("/orders/{order_id}", response_model=OrderResponse)
@@ -88,9 +88,9 @@ def update_order(order_id: int, order_update: OrderUpdate):
     if order is None:
         raise HTTPException(status_code=404, detail="Order not found")
     
-    order._type = order_update.type
-    order._quantity = order_update.quantity
-    order._status = order_update.status
+    order.type = order_update.type
+    order.quantity = order_update.quantity
+    order.status = order_update.status
 
     return {"id": order.id, "type": order.type, "quantity": order.quantity, "status": order.status}
 
