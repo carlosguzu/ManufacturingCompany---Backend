@@ -39,7 +39,7 @@ data = response.json()
 
 #file = open('prueba.json')
 
-#orders_db = json.load(file)
+orders_db = json.load(file)
 # In-memory database to store orders
 # for order in orders_db:
 #    order_id = order['id']
