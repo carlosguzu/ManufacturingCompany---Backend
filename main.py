@@ -80,7 +80,7 @@ def read_order(order_id: int):
 
 @app.get("/orders/", response_model=List[OrderResponse])
 def read_orders(skip: int = 0, limit: int = 10):
-    return [{"id": order.id, "type": order.type, "quantity": order.quantity, "status": order.status} for order in orders_db]
+    return [{"id": order['id'], "type": order['type'], "quantity": order['quantity'], "status": order['status']} for order in orders_db]
 
 @app.put("/orders/{order_id}", response_model=OrderResponse)
 def update_order(order_id: int, order_update: OrderUpdate):
