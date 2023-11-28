@@ -1,0 +1,62 @@
+[
+    {
+        "type": "Whiskey",
+        "quantity": 91,
+        "status": "Producing",
+        "id": "1"
+    },
+    {
+        "type": "Vodka",
+        "quantity": 27,
+        "status": "Finished",
+        "id": "2"
+    },
+    {
+        "type": "Rum",
+        "quantity": 96,
+        "status": "On Queue",
+        "id": "3"
+    },
+    {
+        "type": "Gin",
+        "quantity": 79,
+        "status": "Finished",
+        "id": "4"
+    },
+    {
+        "type": "Tequila",
+        "quantity": 94,
+        "status": "Producing",
+        "id": "5"
+    },
+    {
+        "type": "Brandy",
+        "quantity": 79,
+        "status": "On Queue",
+        "id": "6"
+    },
+    {
+        "type": "Absinthe",
+        "quantity": 7,
+        "status": "Finished",
+        "id": "7"
+    },
+    {
+        "type": "Schnapps",
+        "quantity": 25,
+        "status": "Producing",
+        "id": "8"
+    },
+    {
+        "type": "Cognac",
+        "quantity": 66,
+        "status": "On Queue",
+        "id": "9"
+    },
+    {
+        "type": "Liqueur",
+        "quantity": 33,
+        "status": "Producing",
+        "id": "10"
+    }
+]

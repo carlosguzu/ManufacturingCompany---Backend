@@ -34,12 +34,11 @@ response = requests.get('https://65663055eb8bb4b70ef3043d.mockapi.io/api/v1/liqu
 
 # Asegúrate de que la solicitud fue exitosa
 response.raise_for_status()
-
 data = response.json()
 
 #file = open('prueba.json')
 
-orders_db = data
+#orders_db = json.load(file)
 # In-memory database to store orders
 # for order in orders_db:
 #    order_id = order['id']
@@ -72,8 +71,8 @@ def create_order(order: OrderCreate):
     orders_db.append(order_obj)
 
     json_data = json.dumps(orders_db)
-    response = requests.put('https://65663055eb8bb4b70ef3043d.mockapi.io/api/v1/liquors/{id}', data=json_data)
-    response.raise_for_status()
+    with open('prueba.json', 'file') as file:
+        file.write(json_data)
     return {"id": order_id, "type": order.type, "quantity": order.quantity, "status": order.status}
 
 @app.get("/orders/{order_id}", response_model=OrderResponse)
