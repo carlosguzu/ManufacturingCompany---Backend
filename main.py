@@ -40,7 +40,7 @@ data = response.json()
 orders_db = data
 # In-memory database to store orders
 for order in orders_db:
-    rder_id = order['id']
+    order_id = order['id']
     order_type = order['type']
     quantity = order['quantity']
     status = order['status']
