@@ -35,6 +35,7 @@ class OrderCreate(BaseModel):
     bottle_type: str
     quantity: int
     status: str
+    
 
 class OrderUpdate(BaseModel):
     bottle_type: str
@@ -42,7 +43,7 @@ class OrderUpdate(BaseModel):
     status: str
 
 class OrderResponse(BaseModel):
-    id: str
+    id: ObjectId
     type: str
     quantity: int
     status: str
