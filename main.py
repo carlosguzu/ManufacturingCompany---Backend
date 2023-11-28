@@ -42,7 +42,7 @@ class OrderUpdate(BaseModel):
     status: str
 
 class OrderResponse(BaseModel):
-    id: int
+    id: str
     type: str
     quantity: int
     status: str
