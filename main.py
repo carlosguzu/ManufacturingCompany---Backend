@@ -2,8 +2,19 @@ from typing import List
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Permite solicitudes desde todos los orígenes
+    allow_credentials=True,
+    allow_methods=["*"],  # Permite todos los métodos
+    allow_headers=["*"],  # Permite todos los headers
+)
+
 
 class Order:
     def __init__(self, id, type, quantity, status):
@@ -29,7 +40,7 @@ class Order:
         return self._status
 
 # In-memory database to store orders
-orders_db = {}
+orders_db = { }
 
 class OrderCreate(BaseModel):
     type: str
