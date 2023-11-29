@@ -77,7 +77,7 @@ def read_order(order_id: int):
     return {"id": order.id, "type": order.type, "quantity": order.quantity, "status": order.status}
 
 @app.get("/orders/", response_model=List[OrderResponse])
-def read_orders(skip: int = 0, limit: int = 10):
+def read_orders(skip: int = 0, limit: int = 20):
     orders = list(orders_db.values())[skip : skip + limit]
     return [{"id": order.id, "type": order.type, "quantity": order.quantity, "status": order.status} for order in orders]
 
