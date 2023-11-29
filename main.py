@@ -53,7 +53,7 @@ class OrderUpdate(BaseModel):
     status: str
 
 class OrderResponse(BaseModel):
-    id: str
+    id: int
     type: str
     quantity: int
     status: str
@@ -70,7 +70,7 @@ def create_order(order: OrderCreate):
     return {"id": order_id, "type": order.type, "quantity": order.quantity, "status": order.status}
 
 @app.get("/orders/{order_id}", response_model=OrderResponse)
-def read_order(order_id: str):
+def read_order(order_id: int):
     order = orders_db.get(order_id)
     if order is None:
         raise HTTPException(status_code=404, detail="Order not found")
@@ -79,8 +79,8 @@ def read_order(order_id: str):
 @app.get("/orders/", response_model=List[OrderResponse])
 def read_orders(skip: int = 0, limit: int = 10):
     orders = list(orders_db.values())[skip : skip + limit]
-    return [{"id": str(id), "type": order["type"], "quantity": order["quantity"], "status": order["status"]} for id, order in orders_db.items()]
-    
+    return [{"id": order.id, "type": order.type, "quantity": order.quantity, "status": order.status} for order in orders]
+
 @app.put("/orders/{order_id}", response_model=OrderResponse)
 def update_order(order_id: int, order_update: OrderUpdate):
     order = orders_db.get(order_id)
