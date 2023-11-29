@@ -1,7 +1,5 @@
 from typing import List
 
-import requests
-import json
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
@@ -30,23 +28,8 @@ class Order:
     def status(self):
         return self._status
 
-response = requests.get('https://65663055eb8bb4b70ef3043d.mockapi.io/api/v1/liquors')
-
-# Asegúrate de que la solicitud fue exitosa
-response.raise_for_status()
-data = response.json()
-
-#file = open('prueba.json')
-
-#orders_db = json.load(file)
 # In-memory database to store orders
-# for order in orders_db:
-#    order_id = order['id']
-#    order_type = order['type']
-#    quantity = order['quantity']
-#    status = order['status']
-
-# orders_db = {}
+orders_db = {}
 
 class OrderCreate(BaseModel):
     type: str
@@ -59,20 +42,20 @@ class OrderUpdate(BaseModel):
     status: str
 
 class OrderResponse(BaseModel):
-    id: int
+    id: str
     type: str
     quantity: int
     status: str
+    
+@app.get("/")
+def read_root():
+    return {"Welcome": "Go to /docs to see more!"}
 
 @app.post("/orders/", response_model=OrderResponse)
 def create_order(order: OrderCreate):
     order_id = len(orders_db) + 1
     order_obj = Order(id=order_id, type=order.type, quantity=order.quantity, status=order.status)
-    orders_db.append(order_obj)
-
-    json_data = json.dumps(orders_db)
-    with open('prueba.json', 'file') as file:
-        file.write(json_data)
+    orders_db[order_id] = order_obj
     return {"id": order_id, "type": order.type, "quantity": order.quantity, "status": order.status}
 
 @app.get("/orders/{order_id}", response_model=OrderResponse)
@@ -80,11 +63,12 @@ def read_order(order_id: int):
     order = orders_db.get(order_id)
     if order is None:
         raise HTTPException(status_code=404, detail="Order not found")
-    return [{"id": order['id'], "type": order['type'], "quantity": order['quantity'], "status": order['status']}]
+    return {"id": order.id, "type": order.type, "quantity": order.quantity, "status": order.status}
 
 @app.get("/orders/", response_model=List[OrderResponse])
 def read_orders(skip: int = 0, limit: int = 10):
-    return [{"id": order['id'], "type": order['type'], "quantity": order['quantity'], "status": order['status']} for order in orders_db]
+    orders = list(orders_db.values())[skip : skip + limit]
+    return [{"id": order.id, "type": order.type, "quantity": order.quantity, "status": order.status} for order in orders]
 
 @app.put("/orders/{order_id}", response_model=OrderResponse)
 def update_order(order_id: int, order_update: OrderUpdate):
@@ -92,15 +76,11 @@ def update_order(order_id: int, order_update: OrderUpdate):
     if order is None:
         raise HTTPException(status_code=404, detail="Order not found")
     
-    order.type = order_update.type
-    order.quantity = order_update.quantity
-    order.status = order_update.status
+    order._type = order_update.type
+    order._quantity = order_update.quantity
+    order._status = order_update.status
 
-
-    json_data = json.dumps(orders_db)
-    response = requests.put('https://65663055eb8bb4b70ef3043d.mockapi.io/api/v1/liquors/{id}', data=json_data)
-    response.raise_for_status()
-    return [{"id": order['id'], "type": order['type'], "quantity": order['quantity'], "status": order['status']}]
+    return {"id": order.id, "type": order.type, "quantity": order.quantity, "status": order.status}
 
 @app.delete("/orders/{order_id}", response_model=dict)
 def delete_order(order_id: int):
@@ -108,9 +88,6 @@ def delete_order(order_id: int):
     if order is None:
         raise HTTPException(status_code=404, detail="Order not found")
     
-    json_data = json.dumps(orders_db)
-    response = requests.put('https://65663055eb8bb4b70ef3043d.mockapi.io/api/v1/liquors/{id}', data=json_data)
-    response.raise_for_status()    
     return {"message": "Order deleted successfully"}
 
 if __name__ == "__main__":
