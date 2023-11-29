@@ -70,7 +70,7 @@ def create_order(order: OrderCreate):
     return {"id": order_id, "type": order.type, "quantity": order.quantity, "status": order.status}
 
 @app.get("/orders/{order_id}", response_model=OrderResponse)
-def read_order(order_id: int):
+def read_order(order_id: str):
     order = orders_db.get(order_id)
     if order is None:
         raise HTTPException(status_code=404, detail="Order not found")
